@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/expand"
+        android:title="Menu"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_menu_black_24dp"
+        >
+
+        <menu>
+            <item android:id="@+id/history"
+                android:icon="@drawable/ic_history_black_24dp"
+                android:title="@string/menu_history"
+                app:showAsAction="never"/>
+
+            <item android:id="@+id/change_password"
+                android:icon="@drawable/ic_lock_open_black_24dp"
+                android:title="@string/menu_changepass"
+                app:showAsAction="never"/>
+
+            <item android:id="@+id/donor_logout"
+                android:icon="@drawable/ic_vpn_key_black_24dp"
+                android:title="@string/menu_donor_logout"
+                app:showAsAction="never"/>
+
+            <item android:id="@+id/donor_delete_account"
+                android:icon="@drawable/ic_delete_black_24dp"
+                android:title="@string/menu_donor_delete"
+                app:showAsAction="never"/>
+
+        </menu>
+    </item>
+
+</menu>

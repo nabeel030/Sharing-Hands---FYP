@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="50dp"
+    android:background="@drawable/gradient">
+
+    <ImageView
+        android:id="@+id/login_std_logo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo"
+        />
+
+    <EditText
+        android:id="@+id/std_email"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="@string/title_email"
+        android:inputType="textEmailAddress"
+        android:layout_below="@+id/login_std_logo"
+        android:background="#11000000"
+        android:layout_marginTop="40dp"
+        android:textColorHint="@android:color/white"
+        android:drawableStart="@drawable/ic_email"
+        android:textColor="@android:color/white"
+        />
+
+    <EditText
+        android:id="@+id/std_password"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:inputType="textPassword"
+        android:hint="@string/title_password"
+        android:background="#11000000"
+        android:layout_below="@+id/std_email"
+        android:layout_marginTop="10dp"
+        android:textColorHint="@android:color/white"
+        android:drawableStart="@drawable/ic_lock_black_24dp"
+        android:textColor="@android:color/white"
+        />
+
+    <Button
+        android:id="@+id/std_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/std_password"
+        android:text="Login"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/button"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:id="@+id/std_register_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/std_login"
+        android:textColor="@android:color/white"
+        android:text="Haven't an Account? Create here"
+        android:textSize="18sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>

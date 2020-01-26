@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "843134407153",
+    "firebase_url": "https://sharing-hands.firebaseio.com",
+    "project_id": "sharing-hands",
+    "storage_bucket": "sharing-hands.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843134407153:android:57f300971e52b668137450",
+        "android_client_info": {
+          "package_name": "com.example.sharinghands"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "843134407153-tf9a7np2n48vucvorh2fa99ucq4vdo93.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sharinghands",
+            "certificate_hash": "62afb88af717663eaa49ec54bd29663b3f912810"
+          }
+        },
+        {
+          "client_id": "843134407153-9602bvcrq09gho98n6sr0c88kh1hfmt2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sharinghands",
+            "certificate_hash": "da2bc92431f7900aecef5e85a5dda9a575b422fc"
+          }
+        },
+        {
+          "client_id": "843134407153-c27un07pp7gh60jtqtm0q55k0mhvgjav.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH6fZAc21YjpyOfA0CJTMUpuAyra7HQQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "843134407153-c27un07pp7gh60jtqtm0q55k0mhvgjav.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

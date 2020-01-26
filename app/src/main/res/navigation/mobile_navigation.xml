@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_donor">
+
+    <fragment
+        android:id="@+id/navigation_donor"
+        android:name="com.example.sharinghands.ui.Donor.DonorLoginFragment"
+        android:label="@string/title_donor"
+        tools:layout="@layout/fragment_donorlogin" />
+
+    <fragment
+        android:id="@+id/navigation_ngo"
+        android:name="com.example.sharinghands.ui.NGO.NGOLoginFragment"
+        android:label="@string/title_ngo"
+        tools:layout="@layout/fragment_ngologin" />
+
+    <fragment
+        android:id="@+id/navigation_student"
+        android:name="com.example.sharinghands.ui.Student.StudentLoginFragment"
+        android:label="@string/title_student"
+        tools:layout="@layout/fragment_stdlogin" />
+</navigation>

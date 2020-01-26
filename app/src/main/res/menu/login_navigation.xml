@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_donor"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/title_donor" />
+
+    <item
+        android:id="@+id/navigation_ngo"
+        android:icon="@drawable/ic_account_balance_black_24dp"
+        android:title="@string/title_ngo" />
+
+    <item
+        android:id="@+id/navigation_student"
+        android:icon="@drawable/ic_school_black_24dp"
+        android:title="@string/title_student" />
+
+</menu>
