@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +41,7 @@ public class ChangePassword extends AppCompatActivity {
         donor_old_password = findViewById(R.id.donor_old_password);
         donor_new_password = findViewById(R.id.donor_new_password);
         donor_confirm_password = findViewById(R.id.donor_confirm_passcode);
+        final ProgressBar progressBar = findViewById(R.id.change_progress_circular);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +63,9 @@ public class ChangePassword extends AppCompatActivity {
                 if (!confirm_password.isEmpty() && !newPassword.isEmpty()) {
                     if (newPassword.length() > 6) {
                         if (newPassword.equals(confirm_password)) {
+
+                            progressBar.setVisibility(View.VISIBLE);
+
                             user.reauthenticate(credential)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -70,6 +75,9 @@ public class ChangePassword extends AppCompatActivity {
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
+
+                                                                progressBar.setVisibility(View.GONE);
+
                                                                 if (task.isSuccessful()) {
                                                                     alertDialogue.setTitle("Password Changed!");
                                                                     alertDialogue.setMessage("Your Password has been changed successfully!")

@@ -1,9 +1,9 @@
 package com.example.sharinghands.ui.Donor;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,37 +18,28 @@ import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.sharinghands.DonorHome;
 import com.example.sharinghands.R;
-import com.example.sharinghands.SinglePost;
-import com.example.sharinghands.ui.gallery.GalleryFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
-import org.w3c.dom.Text;
+import java.util.Objects;
 
 public class DonorLoginFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
 
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private SharedPreferences sharedpreferences;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        if (firebaseAuth.getCurrentUser() != null) {
-            // User is logged in
-            startActivity(new Intent(getActivity(), DonorHome.class));
-            getActivity().finish();
-        }
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_donorlogin, container, false);
@@ -58,7 +49,9 @@ public class DonorLoginFragment extends Fragment {
         final TextView register_link = root.findViewById(R.id.donor_register_link);
         final ProgressBar progressBar = root.findViewById(R.id.progress_circular);
 
-        homeViewModel.getText().observe(this, new Observer<String>() {
+        sharedpreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("login_session", Context.MODE_PRIVATE);
+
+        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
 
@@ -103,6 +96,11 @@ public class DonorLoginFragment extends Fragment {
 
 
                                             }else {
+                                                SharedPreferences.Editor editor = sharedpreferences.edit();
+
+                                                editor.putString("status", "donor");
+                                                editor.apply();
+
                                                 Intent intent = new Intent(getActivity(), DonorHome.class);
                                                 startActivity(intent);
                                                 getActivity().finish();

@@ -6,18 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.sharinghands.DonorHome;
 import com.example.sharinghands.EmailRegex.EmailRegex;
-import com.example.sharinghands.NGODashboard;
 import com.example.sharinghands.R;
-import com.example.sharinghands.ui.Donor.DonorRegistration;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -93,11 +89,15 @@ public class NGORegistration extends AppCompatActivity {
                                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                                 String userID = user.getUid();
 
+                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(ngo_name).build();
+
+                                                user.updateProfile(profileUpdates);
+
                                                 mDatabase = FirebaseDatabase.getInstance().getReference();
 
                                                 mDatabase.child("NGOs").child(userID).setValue(ngoModel);
 
-                                                Intent intent = new Intent(NGORegistration.this,NGODashboard.class);
+                                                Intent intent = new Intent(NGORegistration.this,Dashboard.class);
                                                 startActivity(intent);
                                                 finish();
 

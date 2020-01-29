@@ -3,6 +3,12 @@
     package="com.example.sharinghands">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,13 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ChangePassword"></activity>
-        <activity android:name=".ui.Donor.test" />
-        <activity android:name=".DonorHome" />
         <activity
-            android:name=".NGODashboard"
-            android:label="@string/title_activity_ngodashboard"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".ui.NGO.Dashboard"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".CreatePost" />
+        <activity android:name=".ChangePassword" />
+        <activity android:name=".DonorHome" />
         <activity android:name=".ui.Student.StudentRegistration" />
         <activity android:name=".ui.NGO.NGORegistration" />
         <activity android:name=".ui.Donor.DonorRegistration" />

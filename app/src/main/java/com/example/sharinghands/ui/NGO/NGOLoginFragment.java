@@ -1,33 +1,43 @@
 package com.example.sharinghands.ui.NGO;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.sharinghands.DonorHome;
-import com.example.sharinghands.NGODashboard;
 import com.example.sharinghands.R;
-import com.example.sharinghands.ui.Donor.DonorRegistration;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
 
 public class NGOLoginFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
+
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private SharedPreferences sharedpreferences;
+
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -38,8 +48,13 @@ public class NGOLoginFragment extends Fragment {
         final EditText email = root.findViewById(R.id.ngo_email);
         final EditText password = root.findViewById(R.id.ngo_password);
         final Button btn = root.findViewById(R.id.ngo_login);
+        final ProgressBar progressBar = root.findViewById(R.id.ngo_login_progress_bar);
+
+        sharedpreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("login_session", Context.MODE_PRIVATE);
+
+
         final TextView register_link = root.findViewById(R.id.ngo_register_link);
-        dashboardViewModel.getText().observe(this, new Observer<String>() {
+        dashboardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -54,28 +69,48 @@ public class NGOLoginFragment extends Fragment {
                         }
                         else {
 
-                            if (emailaddress.equals("na@gmail.com") && passcode.equals("123")) {
-                                Intent intent = new Intent(getContext(), NGODashboard.class);
-                                startActivity(intent);
-                                (getActivity()).overridePendingTransition(0, 0);
-                            }
+                            progressBar.setVisibility(View.VISIBLE);
 
-                            else {
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                                        getContext());
-                                alertDialogBuilder.setTitle("Error!");
+                            firebaseAuth.signInWithEmailAndPassword(emailaddress, passcode)
+                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                alertDialogBuilder.setMessage("Given credentials did not Match!")
-                                        .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
+                                            progressBar.setVisibility(View.GONE);
 
+                                            if (!task.isSuccessful()) {
+
+                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                        getContext());
+                                                alertDialogBuilder.setTitle("Error!");
+
+                                                alertDialogBuilder.setMessage("Given credentials did not Match!")
+                                                        .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                            }
+                                                        });
+
+                                                AlertDialog alertDialog = alertDialogBuilder.create();
+                                                alertDialog.show();
+
+
+
+                                            }else {
+
+                                                SharedPreferences.Editor editor = sharedpreferences.edit();
+
+                                                editor.putString("status", "ngo");
+                                                editor.apply();
+
+                                                Intent intent = new Intent(getActivity(), Dashboard.class);
+                                                startActivity(intent);
+                                                getActivity().finish();
                                             }
-                                        });
 
-                                AlertDialog alertDialog = alertDialogBuilder.create();
-                                alertDialog.show();
-                            }
+                                        }
+                                    });
                         }
                     }
                 });

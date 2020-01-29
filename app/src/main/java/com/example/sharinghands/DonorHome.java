@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DonorHome extends AppCompatActivity {
 
@@ -120,6 +122,12 @@ public class DonorHome extends AppCompatActivity {
 
             case R.id.donor_logout:
                 FirebaseAuth.getInstance().signOut();
+                SharedPreferences sharedPreferences = getSharedPreferences("login_session", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putString("status", "");
+                editor.apply();
+
                 startActivity(new Intent(DonorHome.this,LoginActivity.class));
                 finish();
                 return true;

@@ -35,5 +35,6 @@
     <string name="save">Save</string>
     <string name="update">Update</string>
     <string name="upload">Upload</string>
+    <string name="title_activity_dashboard">Dashboard</string>
 
 </resources>

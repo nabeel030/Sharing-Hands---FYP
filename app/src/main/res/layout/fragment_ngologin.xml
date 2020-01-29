@@ -7,6 +7,15 @@
     android:padding="50dp"
     android:background="@drawable/gradient">
 
+    <ProgressBar
+        android:id="@+id/ngo_login_progress_bar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="gone"
+        android:layout_above="@id/ngo_login"
+        android:layout_centerHorizontal="true"
+        />
+
     <ImageView
         android:id="@+id/login_ngo_logo"
         android:layout_width="150dp"
