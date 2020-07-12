@@ -96,14 +96,31 @@ public class DonorLoginFragment extends Fragment {
 
 
                                             }else {
-                                                SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                                                editor.putString("status", "donor");
-                                                editor.apply();
+                                                if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                    editor.putString("status", "donor");
+                                                    editor.apply();
 
-                                                Intent intent = new Intent(getActivity(), DonorHome.class);
-                                                startActivity(intent);
-                                                getActivity().finish();
+                                                    Intent intent = new Intent(getActivity(), DonorHome.class);
+                                                    startActivity(intent);
+                                                    getActivity().finish();
+                                                }else{
+                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                            getContext());
+                                                    alertDialogBuilder.setTitle("Info!");
+
+                                                    alertDialogBuilder.setMessage("Please Verify Your Email Address Before Login!")
+                                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                                }
+                                                            });
+
+                                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                                    alertDialog.show();
+                                                }
                                             }
 
                                         }

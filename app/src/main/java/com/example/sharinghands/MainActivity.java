@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.sharinghands.ui.NGO.ActivePosts;
 import com.example.sharinghands.ui.NGO.Dashboard;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         timer = new Timer();
@@ -37,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
                 sharedpreferences = getSharedPreferences("login_session",MODE_PRIVATE);
                 String status = sharedpreferences.getString("status","");
 
-                if (firebaseAuth.getCurrentUser() != null && status.equals("donor")) {
+                if (firebaseAuth.getCurrentUser() != null && status.equals("donor") && firebaseAuth.getCurrentUser().isEmailVerified()) {
                     // User is logged in
                     Intent intent = new Intent(getApplicationContext(), DonorHome.class);
                     startActivity(intent);
                 }
 
-                else if (firebaseAuth.getCurrentUser() != null && status.equals("ngo")) {
+                else if (firebaseAuth.getCurrentUser() != null && status.equals("ngo") && firebaseAuth.getCurrentUser().isEmailVerified()) {
                     // User is logged in
                     Intent intent = new Intent(getApplicationContext(), Dashboard.class);
                     startActivity(intent);
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+
         },3000);
     }
 }

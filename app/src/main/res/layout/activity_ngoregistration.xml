@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="8dp"
-        android:inputType="text"
+        android:inputType="number"
         android:layout_below="@+id/ngo_name"
         android:background="#11000000"
         android:hint="@string/title_NGO_registration_number"

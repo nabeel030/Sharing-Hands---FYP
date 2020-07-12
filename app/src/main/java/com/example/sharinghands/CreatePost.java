@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +33,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreatePost extends AppCompatActivity {
 
@@ -40,11 +48,12 @@ public class CreatePost extends AppCompatActivity {
     Uri image_uri;
     ProgressBar progressBar;
     Post post;
-    int post_count = 0;
     EditText title_of_post, description_of_post, raised_amount_of_post, required_amount_of_post;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference mDatabase;
+    StorageReference storageReference;
+    FirebaseStorage firebaseStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +87,21 @@ public class CreatePost extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == 1 && data.getData() !=null ){
                 image_uri = data.getData();
                 post_image_container.setImageURI(image_uri);
+
+            storageReference = firebaseStorage.getInstance().getReference().child("post").child(image_uri.getLastPathSegment());
+
+            storageReference.putFile(image_uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getApplicationContext(),"Uploaded!", Toast.LENGTH_SHORT).show();
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getApplicationContext(),"Uploaded!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
     }
 
@@ -91,22 +115,31 @@ public class CreatePost extends AppCompatActivity {
         if (item.getItemId() == R.id.save_post) {
             String title = title_of_post.getText().toString();
             String desc = description_of_post.getText().toString();
-            int raised_amount = Integer.parseInt(raised_amount_of_post.getText().toString());
-            int required_amount = Integer.parseInt(required_amount_of_post.getText().toString());
+            String raised = raised_amount_of_post.getText().toString();
+            String required = required_amount_of_post.getText().toString();
             String userID = user.getUid();
 
-            if (!title.isEmpty() && !desc.isEmpty() && raised_amount >=0 && required_amount >0) {
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            if (!title.isEmpty() && !desc.isEmpty() && !raised.isEmpty() && !required.isEmpty()) {
+
+                int raised_amount = Integer.parseInt(raised);
+                int required_amount = Integer.parseInt(required);
+
+                if (raised_amount >=0 && required_amount >= 30)
+                {
 
                 if (raised_amount < required_amount) {
 
-                    post = new Post(R.drawable.logo, "Sharing Hands", title, desc,
+                    post = new Post(userID,R.drawable.logo, "Helping Hands", title, desc,
                             R.drawable.logo, raised_amount, required_amount);
 
                     mDatabase = FirebaseDatabase.getInstance().getReference();
 
                     progressBar.setVisibility(View.VISIBLE);
 
-                    mDatabase.child("Post").child(userID).setValue(post)
+
+                    mDatabase.child("Post").push().setValue(post)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -124,8 +157,10 @@ public class CreatePost extends AppCompatActivity {
                                     Toast.makeText(getApplication(), "Post Failed!", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                }else
+                }else {
                     Toast.makeText(getApplicationContext(),"Raised Amount Cant be greater than Required Amount!",Toast.LENGTH_SHORT).show();
+                }
+                }
 
             }else
                 Toast.makeText(getApplicationContext(),"All fields are Required!",Toast.LENGTH_SHORT).show();

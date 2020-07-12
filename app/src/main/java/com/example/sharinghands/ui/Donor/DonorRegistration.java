@@ -2,10 +2,12 @@ package com.example.sharinghands.ui.Donor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.sharinghands.DonorHome;
 import com.example.sharinghands.EmailRegex.EmailRegex;
+import com.example.sharinghands.LoginActivity;
 import com.example.sharinghands.R;
 import com.google.android.gms.common.internal.Objects;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -92,11 +95,52 @@ public class DonorRegistration extends AppCompatActivity {
                                                 user.updateProfile(profileUpdates);
 
                                                 if (!task.isSuccessful()) {
-                                                    Toast.makeText(getApplicationContext(), "Registration Failed!", Toast.LENGTH_SHORT).show();
+                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                            DonorRegistration.this);
+                                                    alertDialogBuilder.setTitle("Error!");
+
+                                                    alertDialogBuilder.setMessage("Account With This Email Address Already Exists!")
+                                                            .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                                }
+                                                            });
+
+                                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                                    alertDialog.show();
+
                                                 } else {
-                                                    Intent intent = new Intent(DonorRegistration.this, DonorHome.class);
-                                                    startActivity(intent);
-                                                    finish();
+                                                    progressBar.setVisibility(View.GONE);
+
+                                                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if(task.isSuccessful()){
+
+                                                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                                        DonorRegistration.this);
+                                                                alertDialogBuilder.setTitle("Info!");
+
+                                                                alertDialogBuilder.setMessage("Verification Link Has Been Sent To Your Email Address! Please Verify")
+                                                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                                Intent intent = new Intent(DonorRegistration.this, LoginActivity.class);
+                                                                                startActivity(intent);
+                                                                                finish();
+                                                                            }
+                                                                        });
+
+                                                                AlertDialog alertDialog = alertDialogBuilder.create();
+                                                                alertDialog.show();
+
+                                                            }else
+                                                            {
+                                                                Toast.makeText(getApplicationContext(),task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         });

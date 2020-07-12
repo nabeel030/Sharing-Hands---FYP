@@ -20,7 +20,6 @@
         android:layout_marginTop="15dp"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/ngo_logo"
-        android:text="NGO Name"
         android:textColor="@android:color/black"
         android:textSize="17sp"
         tools:ignore="UnknownId" />
@@ -32,16 +31,14 @@
         android:layout_below="@+id/ngo_logo"
         android:layout_marginTop="12dp"
         android:textSize="17sp"
-        android:textStyle="bold"
-        android:text="Post Title!" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/post_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/post_title"
-        android:layout_marginTop="6dp"
-        android:text="Dummy details of this post is displayed here!" />
+        android:layout_marginTop="6dp" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -75,16 +72,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/post_image"
-                android:layout_alignParentLeft="true"
-                android:text="Raised: Rs.5000" />
+                android:layout_alignParentLeft="true" />
 
             <TextView
                 android:id="@+id/amount_required"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/post_image"
-                android:layout_alignParentEnd="true"
-                android:text="Remaining: Rs.15000" />
+                android:layout_alignParentEnd="true" />
 
             <Button
                 android:id="@+id/donate_btn"

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.sharinghands.ui.NGO.Dashboard;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -28,6 +30,7 @@ public class ChangePassword extends AppCompatActivity {
     Context context = this;
     Button btn;
     EditText donor_new_password, donor_confirm_password, donor_old_password;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class ChangePassword extends AppCompatActivity {
         donor_confirm_password = findViewById(R.id.donor_confirm_passcode);
         final ProgressBar progressBar = findViewById(R.id.change_progress_circular);
 
+        sharedPreferences = getSharedPreferences("login_session",MODE_PRIVATE);
+        final String status = sharedPreferences.getString("status","");
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,13 +60,15 @@ public class ChangePassword extends AppCompatActivity {
                 final String newPassword = donor_new_password.getText().toString();
                 String confirm_password = donor_confirm_password.getText().toString();
 
-                assert userEmail != null;
-                AuthCredential credential = EmailAuthProvider
-                        .getCredential(userEmail, oldPassword);
 
                 final AlertDialog.Builder alertDialogue = new AlertDialog.Builder(context);
 
                 if (!confirm_password.isEmpty() && !newPassword.isEmpty()) {
+
+                    assert userEmail != null;
+                    AuthCredential credential = EmailAuthProvider
+                            .getCredential(userEmail, oldPassword);
+
                     if (newPassword.length() > 6) {
                         if (newPassword.equals(confirm_password)) {
 
@@ -84,9 +92,15 @@ public class ChangePassword extends AppCompatActivity {
                                                                             .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                                                                                 @Override
                                                                                 public void onClick(DialogInterface dialog, int which) {
-                                                                                    Intent intent = new Intent(ChangePassword.this, DonorHome.class);
-                                                                                    startActivity(intent);
-                                                                                    finish();
+                                                                                    if (status.equals("donor")) {
+                                                                                        Intent intent = new Intent(ChangePassword.this, DonorHome.class);
+                                                                                        startActivity(intent);
+                                                                                    }
+                                                                                    else if(status.equals("ngo")){
+                                                                                        finish();Intent intent = new Intent(ChangePassword.this, Dashboard.class);
+                                                                                        startActivity(intent);
+                                                                                        finish();
+                                                                                    }
                                                                                 }
                                                                             });
                                                                     AlertDialog alertDialog = alertDialogue.create();
@@ -113,7 +127,15 @@ public class ChangePassword extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(this,DonorHome.class));
-        finish();
+        sharedPreferences = getSharedPreferences("login_session", MODE_PRIVATE);
+        String status = sharedPreferences.getString("status", "");
+        if (status.equals("donor")) {
+            startActivity(new Intent(this, DonorHome.class));
+            finish();
+        }
+        else if(status.equals("ngo")){
+            startActivity(new Intent(this, Dashboard.class));
+            finish();
+        }
     }
 }

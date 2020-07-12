@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DonorHome">
+    tools:context=".ui.NGO.ActivePosts">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/post_recyclerview"
+        android:id="@+id/active_post_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <ProgressBar
-        android:id="@+id/donor_home_progressbar"
+        android:id="@+id/active_post_progressbar"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"

@@ -1,9 +1,7 @@
 package com.example.sharinghands.ui;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +9,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.sharinghands.ChangePassword;
 import com.example.sharinghands.R;
 import com.example.sharinghands.SinglePost;
+import com.example.sharinghands.ui.NGO.NGOModel;
 
 import java.util.ArrayList;
 
@@ -43,12 +40,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post current_post = mposts.get(position);
-        holder.img_logo.setImageResource(current_post.getSrc_image_logo());
-        holder.img_post.setImageResource(current_post.getSrc_img_post());
+        holder.img_logo.setImageResource(R.drawable.logo);
+        holder.img_post.setImageResource(R.drawable.logo);
         holder.NGO_title.setText(current_post.getNgo_title());
         holder.post_title.setText(current_post.getPost_title());
+        holder.post_detail.setText(current_post.getPost_details());
         holder.amount_raised.setText(new StringBuilder("Rs: ").append(current_post.getRaised_amount()));
-        
+        holder.amount_required.setText(new StringBuilder("Rs: ").append(current_post.getRequired_amount()));
+
     }
 
     @Override
@@ -56,7 +55,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return mposts.size();
     }
 
-    public static class  PostViewHolder extends RecyclerView.ViewHolder {
+    public  class  PostViewHolder extends RecyclerView.ViewHolder {
 
         ImageView img_logo, img_post;
         TextView NGO_title;
@@ -80,6 +79,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             donate = itemView.findViewById(R.id.donate_btn);
             view_detail = itemView.findViewById(R.id.post_details_btn);
             relativeLayout = itemView.findViewById(R.id.post_item_r_layout);
+
+            donate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Post selectedPost = mposts.get(position);
+
+                    NGOModel ngoModel = new NGOModel();
+                    ngoModel.Donate(selectedPost.getPostKey(), selectedPost.getRaised_amount(), context);
+                }
+            });
 
             view_detail.setOnClickListener(new View.OnClickListener() {
                 @Override

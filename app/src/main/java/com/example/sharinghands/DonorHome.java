@@ -5,38 +5,40 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.example.sharinghands.ui.Donor.DonorLoginFragment;
 import com.example.sharinghands.ui.Post;
 import com.example.sharinghands.ui.PostAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class DonorHome extends AppCompatActivity {
 
     Context context = this;
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    ArrayList<Post> arrayList = new ArrayList<>();
     RecyclerView.LayoutManager layoutManager;
+    RecyclerView.Adapter adapter;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    DatabaseReference databaseReference = firebaseDatabase.getReference("Post");
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,61 +47,48 @@ public class DonorHome extends AppCompatActivity {
 
         setTitle("Active Posts");
 
+
         recyclerView = findViewById(R.id.post_recyclerview);
+        progressBar = findViewById(R.id.donor_home_progressbar);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
 
+        progressBar.setVisibility(View.VISIBLE);
 
-        ArrayList<Post> arrayList = new ArrayList<>();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        /*arrayList.add(new Post(R.drawable.logo,"Sharing Hands","Post Title","These are some description",
-                        R.drawable.logo,15000,5000));
+                arrayList.clear();
 
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                        R.drawable.logo,15000,5000));
+                for (DataSnapshot posts : dataSnapshot.getChildren()){
 
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
+                    Post post = posts.getValue(Post.class);
 
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
+                    if (post.getRaised_amount() < post.getRequired_amount()) {
+                        post.setPostKey(posts.getKey());
+                        arrayList.add(post);
+                    }
+                }
 
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
+                adapter = new PostAdapter(arrayList,context);
 
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
+                layoutManager = new LinearLayoutManager(getApplicationContext());
+                ((LinearLayoutManager) layoutManager).setReverseLayout(true);
+                ((LinearLayoutManager) layoutManager).setStackFromEnd(true);
 
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(adapter);
 
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
-
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
-
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
-
-        arrayList.add(new Post(R.drawable.logo,"NGO Name","Post Title","These are some description",
-                R.drawable.logo,15000,5000));
-*/
-        arrayList.add(new Post(R.drawable.logo,"Sharing Hands","Wedding","Donate your money to support.",
-                R.drawable.logo,100,100000));
-
-        arrayList.add(new Post(R.drawable.icon,"Helping Hands","Health care","Some post description here.",
-                R.drawable.post_image,1000,100000));
-
-        arrayList.add(new Post(R.drawable.logo,"Almasad","Home Utilities","share your money with others",
-                R.drawable.logo,10000,100000));
-
-        adapter = new PostAdapter(arrayList,context);
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+                progressBar.setVisibility(View.GONE);
+            }
 
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(),"Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

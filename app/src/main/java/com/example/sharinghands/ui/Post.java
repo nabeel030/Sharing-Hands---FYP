@@ -1,18 +1,21 @@
 package com.example.sharinghands.ui;
 
 public class Post {
-    private int src_image_logo;
+
+    private String ngo_id;
     private String ngo_title;
     private String post_title;
     private String post_details;
+    private int src_image_logo;
     private int src_img_post;
     private int raised_amount;
     private int required_amount;
-
+    private String key;
     public Post() {
     }
 
-    public Post(int src_image_logo, String ngo_title, String post_title, String post_details, int src_img_post, int raised_amount, int remaining_amount) {
+    public Post(String ngo_id,int src_image_logo, String ngo_title, String post_title, String post_details, int src_img_post, int raised_amount, int remaining_amount) {
+        this.ngo_id = ngo_id;
         this.src_image_logo = src_image_logo;
         this.ngo_title = ngo_title;
         this.post_title = post_title;
@@ -20,6 +23,14 @@ public class Post {
         this.src_img_post = src_img_post;
         this.raised_amount = raised_amount;
         this.required_amount = remaining_amount;
+    }
+
+    public String getNgo_id() {
+        return ngo_id;
+    }
+
+    public void setNgo_id(String ngo_id) {
+        this.ngo_id = ngo_id;
     }
 
     public int getSrc_image_logo() {
@@ -76,6 +87,14 @@ public class Post {
 
     public void setRequired_amount(int required_amount) {
         this.required_amount = required_amount;
+    }
+
+    public void setPostKey(String key) {
+        this.key = key;
+    }
+
+    public String getPostKey() {
+        return key;
     }
 }
 

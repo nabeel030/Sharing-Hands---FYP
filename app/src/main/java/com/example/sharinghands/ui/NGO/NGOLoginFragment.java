@@ -99,14 +99,32 @@ public class NGOLoginFragment extends Fragment {
 
                                             }else {
 
-                                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                if (firebaseAuth.getCurrentUser().isEmailVerified()) {
 
-                                                editor.putString("status", "ngo");
-                                                editor.apply();
+                                                    SharedPreferences.Editor editor = sharedpreferences.edit();
 
-                                                Intent intent = new Intent(getActivity(), Dashboard.class);
-                                                startActivity(intent);
-                                                getActivity().finish();
+                                                    editor.putString("status", "ngo");
+                                                    editor.apply();
+
+                                                    Intent intent = new Intent(getActivity(), Dashboard.class);
+                                                    startActivity(intent);
+                                                    getActivity().finish();
+                                                } else {
+                                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                            getContext());
+                                                    alertDialogBuilder.setTitle("Info!");
+
+                                                    alertDialogBuilder.setMessage("Please Verify Your Email Address Before Login!")
+                                                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                                }
+                                                            });
+
+                                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                                    alertDialog.show();
+                                                }
                                             }
 
                                         }
