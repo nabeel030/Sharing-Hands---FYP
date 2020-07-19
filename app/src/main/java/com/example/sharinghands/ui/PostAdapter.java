@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sharinghands.R;
 import com.example.sharinghands.SinglePost;
-import com.example.sharinghands.ui.NGO.NGOModel;
 
 import java.util.ArrayList;
 
@@ -85,9 +84,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     Post selectedPost = mposts.get(position);
-
-                    NGOModel ngoModel = new NGOModel();
-                    ngoModel.Donate(selectedPost.getPostKey(), selectedPost.getRaised_amount(), context);
+                    selectedPost.Donate(selectedPost.getPostKey(), selectedPost.getRaised_amount(), context);
                 }
             });
 

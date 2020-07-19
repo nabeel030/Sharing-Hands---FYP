@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.sharinghands.ChangePassword;
 import com.example.sharinghands.LoginActivity;
+import com.example.sharinghands.LogoUpload;
 import com.example.sharinghands.R;
 import com.example.sharinghands.ui.Post;
 import com.example.sharinghands.ui.PostAdapter;
@@ -139,6 +140,12 @@ public class ActivePosts extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 return true;
+
+            case R.id.ngo_change_logo:
+                Intent logo_intent = new Intent(this, LogoUpload.class);
+                startActivity(logo_intent);
+                finish();
+            return true;
 
             case R.id.ngo_logout:
                 FirebaseAuth.getInstance().signOut();

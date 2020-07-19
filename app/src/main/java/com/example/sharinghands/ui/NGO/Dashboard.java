@@ -8,18 +8,16 @@ import android.os.Bundle;
 
 import com.example.sharinghands.ChangePassword;
 import com.example.sharinghands.CreatePost;
-import com.example.sharinghands.DonorHome;
 import com.example.sharinghands.LoginActivity;
+import com.example.sharinghands.LogoUpload;
 import com.example.sharinghands.ui.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.view.Menu;
@@ -37,8 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -157,6 +153,12 @@ public class Dashboard extends AppCompatActivity {
                 i.putExtra("post_status", "active");
                 startActivity(i);
                 finish();
+                return true;
+
+                case R.id.ngo_change_logo:
+                    Intent logo_intent = new Intent(this, LogoUpload.class);
+                    startActivity(logo_intent);
+                    finish();
                 return true;
 
             case R.id.ngo_change_password:

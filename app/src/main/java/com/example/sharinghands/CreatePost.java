@@ -2,17 +2,10 @@ package com.example.sharinghands;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ProcessLifecycleOwner;
-
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,10 +18,8 @@ import android.widget.Toast;
 
 import com.example.sharinghands.ui.NGO.Dashboard;
 import com.example.sharinghands.ui.Post;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -36,10 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CreatePost extends AppCompatActivity {
 
@@ -131,7 +118,7 @@ public class CreatePost extends AppCompatActivity {
 
                 if (raised_amount < required_amount) {
 
-                    post = new Post(userID,R.drawable.logo, "Helping Hands", title, desc,
+                    post = new Post(userID,R.drawable.logo, user.getDisplayName(), title, desc,
                             R.drawable.logo, raised_amount, required_amount);
 
                     mDatabase = FirebaseDatabase.getInstance().getReference();

@@ -27,6 +27,7 @@
 
     <string name="menu_history">History</string>
     <string name="menu_changepass">Change Password</string>
+    <string name="menu_change_logo">Change Logo</string>
     <string name="menu_donor_logout">Logout</string>
     <string name="menu_donor_delete">Delete Account</string>
 
@@ -36,5 +37,8 @@
     <string name="update">Update</string>
     <string name="upload">Upload</string>
     <string name="title_activity_dashboard">Dashboard</string>
+    <string name="choose">Browse Image</string>
+
+
 
 </resources>

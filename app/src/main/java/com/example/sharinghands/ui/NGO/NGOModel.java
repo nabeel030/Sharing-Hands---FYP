@@ -91,44 +91,5 @@ public class NGOModel {
         return isVerified[0];
     }
 
-    public void Donate(String key, final int raisedAmount, final Context context) {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference databaseReference = firebaseDatabase.getReference("Post").child(key);
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(context);
-
-        final EditText edittext = new EditText(context);
-        edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
-        edittext.setPadding(40, 0, 40, 0);
-        alert.setTitle("Enter Amount");
-        alert.setView(edittext);
-
-        alert.setPositiveButton("Donate", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                int donationAmount = Integer.parseInt(edittext.getText().toString());
-
-                if (donationAmount < 20) {
-                    Toast.makeText(context,"Minimum Amount that can be donated is Rs. 20", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                databaseReference.child("raised_amount").setValue(raisedAmount + donationAmount);
-
-                Toast toast = Toast.makeText(context, "Thank you for your Donation!", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-
-            }
-        });
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-
-            }
-        });
-
-        alert.show();
-
-    }
-
 }
 

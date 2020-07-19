@@ -19,6 +19,11 @@
                 android:title="@string/menu_changepass"
                 app:showAsAction="never"/>
 
+            <item android:id="@+id/ngo_change_logo"
+                android:icon="@drawable/ic_insert_photo_black_24dp"
+                android:title="@string/menu_change_logo"
+                app:showAsAction="never"/>
+
             <item android:id="@+id/ngo_logout"
                 android:icon="@drawable/ic_vpn_key_black_24dp"
                 android:title="@string/menu_donor_logout"
