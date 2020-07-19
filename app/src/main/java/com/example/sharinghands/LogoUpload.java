@@ -20,6 +20,8 @@ import com.example.sharinghands.ui.NGO.Dashboard;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -77,14 +79,13 @@ public class LogoUpload extends AppCompatActivity {
 
     private void imageUploader(){
         String user_id = FirebaseAuth.getInstance().getUid();
-        StorageReference reference = storageReference.child(user_id+"."+getExtension(imageUri));
+        final StorageReference reference = storageReference.child(user_id+"."+getExtension(imageUri));
 
         reference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-//                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        getDownloadUrl(reference);
                         logo_up_progressbar.setVisibility(View.INVISIBLE);
                         Toast toast = Toast.makeText(getApplicationContext(),"Logo Uploaded Successfully!", Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
@@ -96,7 +97,7 @@ public class LogoUpload extends AppCompatActivity {
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
                         // ...
-                        Toast.makeText(getApplicationContext(),"Failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Something went wrong...", Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -109,6 +110,25 @@ public class LogoUpload extends AppCompatActivity {
             imageUri = data.getData();
             logo_view.setImageURI(imageUri);
         }
+    }
+
+    private void getDownloadUrl(StorageReference reference) {
+        reference.getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        setNGOLogoUrl(uri);
+                    }
+                });
+    }
+
+    private void setNGOLogoUrl (Uri uri) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(uri)
+                .build();
+
+        user.updateProfile(request);
     }
 
     @Override

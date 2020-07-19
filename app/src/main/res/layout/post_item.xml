@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/post_item_r_layout"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/ngo_logo"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:src="@drawable/logo" />
+        android:src="@drawable/placeholder" />
 
     <TextView
         android:id="@+id/ngo_title"
@@ -63,9 +63,9 @@
             <ImageView
                 android:id="@+id/post_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
                 android:layout_marginTop="28dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/placeholder" />
 
             <TextView
                 android:id="@+id/amount_raised"
@@ -88,6 +88,7 @@
                 android:layout_below="@+id/amount_raised"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="7dp"
+                android:textColor="@android:color/white"
                 android:background="@drawable/button"
                 android:text="Donate Now" />
 
@@ -98,6 +99,7 @@
                 android:layout_below="@+id/amount_required"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="7dp"
+                android:textColor="@android:color/white"
                 android:background="@drawable/button"
                 android:text="View Details" />
 

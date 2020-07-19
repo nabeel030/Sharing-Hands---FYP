@@ -84,6 +84,7 @@ public class ActivePosts extends AppCompatActivity {
                 for (DataSnapshot posts : dataSnapshot.getChildren()){
 
                     Post post = posts.getValue(Post.class);
+                    post.setPostKey(posts.getKey());
 
                     if (post.getNgo_id().equals(current_ngo_id)) {
                         if (postStatus.equals("active")) {

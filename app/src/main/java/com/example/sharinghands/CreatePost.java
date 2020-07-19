@@ -3,6 +3,7 @@ package com.example.sharinghands;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,12 +11,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.example.sharinghands.ui.NGO.Dashboard;
 import com.example.sharinghands.ui.Post;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,13 +27,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 public class CreatePost extends AppCompatActivity {
 
     Button post_image_upload_btn;
     ImageView post_image_container;
-    Uri image_uri;
+    Uri imageUri;
     ProgressBar progressBar;
     Post post;
     EditText title_of_post, description_of_post, raised_amount_of_post, required_amount_of_post;
@@ -40,7 +40,6 @@ public class CreatePost extends AppCompatActivity {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference mDatabase;
     StorageReference storageReference;
-    FirebaseStorage firebaseStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,38 +56,49 @@ public class CreatePost extends AppCompatActivity {
         required_amount_of_post = findViewById(R.id.required_amount_of_post);
         progressBar = findViewById(R.id.progress_circular_post);
 
+        storageReference = FirebaseStorage.getInstance().getReference("Posts/Images");
+
         post_image_upload_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent().setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent,1);
+                imageBrowser();
             }
         });
+    }
+
+    private void imageBrowser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, 1);
+    }
+
+    private String getExtension(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void imageUploader(String postKey){
+
+        final StorageReference reference = storageReference.child(postKey+"."+getExtension(imageUri));
+
+        reference.putFile(imageUri)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(),"Something Went Wrong...", Toast.LENGTH_LONG).show();
+
+                    }
+                });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == 1 && data.getData() !=null ){
-                image_uri = data.getData();
-                post_image_container.setImageURI(image_uri);
-
-            storageReference = firebaseStorage.getInstance().getReference().child("post").child(image_uri.getLastPathSegment());
-
-            storageReference.putFile(image_uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(),"Uploaded!", Toast.LENGTH_SHORT).show();
-                }
-            })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(),"Uploaded!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+        if (requestCode==1 && resultCode==RESULT_OK && data!=null && data.getData()!=null) {
+            imageUri = data.getData();
+            post_image_container.setImageURI(imageUri);
         }
     }
 
@@ -125,11 +135,12 @@ public class CreatePost extends AppCompatActivity {
 
                     progressBar.setVisibility(View.VISIBLE);
 
-
-                    mDatabase.child("Post").push().setValue(post)
+                    final String postKey = mDatabase.child("Post").push().getKey();
+                    mDatabase.child("Post").child(postKey).setValue(post)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+                                    imageUploader(postKey);
                                     progressBar.setVisibility(View.GONE);
                                     Toast.makeText(getApplication(), "Post Created Successfully!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(CreatePost.this, Dashboard.class);

@@ -2,6 +2,7 @@ package com.example.sharinghands.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +10,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.bumptech.glide.Glide;
 import com.example.sharinghands.R;
 import com.example.sharinghands.SinglePost;
-
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
@@ -37,10 +40,32 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
+    public void onBindViewHolder(final @NonNull PostViewHolder holder, int position) {
+
         Post current_post = mposts.get(position);
-        holder.img_logo.setImageResource(R.drawable.logo);
-        holder.img_post.setImageResource(R.drawable.logo);
+
+        String BaseUrl = "gs://sharing-hands.appspot.com";
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(BaseUrl);
+
+        storageReference.child("logos/"+current_post.getNgo_id()+".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(context)
+                        .load(uri.toString())
+                        .into(holder.img_logo);
+            }
+        });
+
+        storageReference.child("Posts/Images/"+current_post.getPostKey()+".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(context)
+                        .load(uri.toString())
+                        .into(holder.img_post);
+            }
+        });
+
+
         holder.NGO_title.setText(current_post.getNgo_title());
         holder.post_title.setText(current_post.getPost_title());
         holder.post_detail.setText(current_post.getPost_details());
@@ -56,7 +81,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public  class  PostViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView img_logo, img_post;
+        ImageView img_post;
+        CircleImageView img_logo;
         TextView NGO_title;
         TextView post_title;
         TextView post_detail;
