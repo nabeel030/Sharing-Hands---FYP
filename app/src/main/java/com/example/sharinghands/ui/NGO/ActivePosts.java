@@ -5,12 +5,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,6 +45,7 @@ public class ActivePosts extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<Post> arrayList = new ArrayList<>();
     RecyclerView.LayoutManager layoutManager;
+    SwipeRefreshLayout refreshLayout;
     RecyclerView.Adapter adapter;
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference databaseReference = firebaseDatabase.getReference("Post");
@@ -56,6 +59,7 @@ public class ActivePosts extends AppCompatActivity {
         setContentView(R.layout.activity_active_posts);
 
         recyclerView = findViewById(R.id.active_post_recyclerview);
+        refreshLayout = findViewById(R.id.refresh);
         progressBar = findViewById(R.id.active_post_progressbar);
 
         recyclerView.setHasFixedSize(true);
@@ -75,6 +79,27 @@ public class ActivePosts extends AppCompatActivity {
             setTitle("Completed Posts");
         }
 
+        laodPosts(databaseReference, current_ngo_id, postStatus);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                laodPosts(databaseReference, current_ngo_id, postStatus);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                },4000);
+
+            }
+        });
+
+    }
+
+    public void laodPosts(DatabaseReference databaseReference, final String current_ngo_id, final String postStatus) {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -94,7 +119,7 @@ public class ActivePosts extends AppCompatActivity {
                         }
 
                         if (postStatus.equals("all")) {
-                                arrayList.add(post);
+                            arrayList.add(post);
                         }
 
                         if (postStatus.equals("completed")) {

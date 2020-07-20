@@ -5,17 +5,22 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.example.sharinghands.ui.NGO.ActivePosts;
 import com.example.sharinghands.ui.Post;
 import com.example.sharinghands.ui.PostAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +38,7 @@ public class DonorHome extends AppCompatActivity {
 
     Context context = this;
     RecyclerView recyclerView;
+    SwipeRefreshLayout refreshLayout;
     ArrayList<Post> arrayList = new ArrayList<>();
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
@@ -49,12 +55,34 @@ public class DonorHome extends AppCompatActivity {
 
 
         recyclerView = findViewById(R.id.post_recyclerview);
+        refreshLayout = findViewById(R.id.swipeRefresh);
         progressBar = findViewById(R.id.donor_home_progressbar);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-
         progressBar.setVisibility(View.VISIBLE);
 
+        loadPosts(databaseReference);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                loadPosts(databaseReference);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                },3000);
+
+            }
+        });
+
+
+    }
+
+    public void loadPosts(DatabaseReference databaseReference) {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
