@@ -10,10 +10,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sharinghands.ui.NGO.Dashboard;
@@ -26,10 +25,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class LogoUpload extends AppCompatActivity {
 
-    ImageView logo_view;
+    CircleImageView logo_view;
     Button upload;
+    TextView msg;
     ProgressBar logo_up_progressbar;
     public Uri imageUri;
     StorageReference storageReference;
@@ -44,6 +46,8 @@ public class LogoUpload extends AppCompatActivity {
         logo_view = findViewById(R.id.logo_view);
         upload = findViewById(R.id.upload);
         logo_up_progressbar = findViewById(R.id.logo_up_progressbar);
+        msg = findViewById(R.id.msg);
+
 
         storageReference = FirebaseStorage.getInstance().getReference("logos");
 
@@ -51,6 +55,7 @@ public class LogoUpload extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 imageBrowser();
+                msg.setVisibility(View.GONE);
             }
         });
 
@@ -71,15 +76,15 @@ public class LogoUpload extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
-    private String getExtension(Uri uri) {
+   /* private String getExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
+    }*/
 
     private void imageUploader(){
         String user_id = FirebaseAuth.getInstance().getUid();
-        final StorageReference reference = storageReference.child(user_id+"."+getExtension(imageUri));
+        final StorageReference reference = storageReference.child(user_id+".png");
 
         reference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -90,6 +95,9 @@ public class LogoUpload extends AppCompatActivity {
                         Toast toast = Toast.makeText(getApplicationContext(),"Logo Uploaded Successfully!", Toast.LENGTH_LONG);
                         toast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
                         toast.show();
+                        Intent intent = new Intent(LogoUpload.this,Dashboard.class);
+                        startActivity(intent);
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -110,6 +118,9 @@ public class LogoUpload extends AppCompatActivity {
             imageUri = data.getData();
             logo_view.setImageURI(imageUri);
         }
+
+        upload.setVisibility(View.VISIBLE);
+
     }
 
     private void getDownloadUrl(StorageReference reference) {

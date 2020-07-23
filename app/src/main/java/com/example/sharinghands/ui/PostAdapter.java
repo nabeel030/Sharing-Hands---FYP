@@ -72,6 +72,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.amount_raised.setText(new StringBuilder("Rs: ").append(current_post.getRaised_amount()));
         holder.amount_required.setText(new StringBuilder("Rs: ").append(current_post.getRequired_amount()));
 
+        if (current_post.getPost_status()) {
+            holder.donate.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
@@ -110,16 +114,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     Post selectedPost = mposts.get(position);
-                    selectedPost.Donate(selectedPost.getPostKey(), selectedPost.getRaised_amount(), context);
+                    selectedPost.Donate(selectedPost.getPostKey(), selectedPost.getRaised_amount(), context, selectedPost.getNgo_title(), selectedPost.getPost_title());
                 }
             });
 
-            view_detail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemView.getContext().startActivity(new Intent(itemView.getContext(), SinglePost.class));
-                }
-            });
         }
     }
 }

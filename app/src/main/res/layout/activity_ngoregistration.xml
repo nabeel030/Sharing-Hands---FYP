@@ -7,14 +7,13 @@
     android:background="@drawable/gradient"
     android:paddingStart="40dp"
     android:paddingEnd="40dp"
-    android:paddingTop="35dp"
     android:paddingBottom="15dp"
     tools:context=".ui.NGO.NGORegistration">
 
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/logo"
         />

@@ -17,22 +17,49 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LogoUpload"></activity>
-        <activity android:name=".ui.NGO.ActivePosts" />
+        <activity android:name=".ForgetPassword"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.Donor.History"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LogoUpload"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.NGO.ActivePosts"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.NGO.Dashboard"
-            android:label="@string/title_activity_dashboard" />
-        <activity android:name=".CreatePost" />
-        <activity android:name=".ChangePassword" />
-        <activity android:name=".DonorHome" />
-        <activity android:name=".ui.Student.StudentRegistration" />
-        <activity android:name=".ui.NGO.NGORegistration" />
-        <activity android:name=".ui.Donor.DonorRegistration" />
-        <activity android:name=".SinglePost" />
+            android:label="@string/title_activity_dashboard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CreatePost"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChangePassword"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DonorHome"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.Student.StudentRegistration"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.NGO.NGORegistration"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.Donor.DonorRegistration"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SinglePost"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".MainActivity">
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

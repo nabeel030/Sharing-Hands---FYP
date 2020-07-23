@@ -8,6 +8,9 @@ import android.view.Gravity;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.sharinghands.DatabaseHelper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -22,6 +25,7 @@ public class Post {
     private int raised_amount;
     private int required_amount;
     private String key;
+    private boolean post_status;
     public Post() {
     }
 
@@ -108,9 +112,19 @@ public class Post {
         return key;
     }
 
-    public void Donate(String key, final int raisedAmount, final Context context) {
+    public boolean getPost_status() {
+        return post_status;
+    }
+
+    public void setPost_status(boolean post_status) {
+        this.post_status = post_status;
+    }
+
+    public void Donate(String key, final int raisedAmount, final Context context, final String ngo, final String postTitle) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference databaseReference = firebaseDatabase.getReference("Post").child(key);
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final DatabaseHelper databaseHelper = new DatabaseHelper(context);
 
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
@@ -134,6 +148,7 @@ public class Post {
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();
 
+                databaseHelper.DataInsertion(user.getUid(),ngo,postTitle,donationAmount);
             }
         });
 

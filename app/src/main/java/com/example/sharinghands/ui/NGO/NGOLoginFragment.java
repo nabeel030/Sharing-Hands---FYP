@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.sharinghands.DonorHome;
+import com.example.sharinghands.ForgetPassword;
 import com.example.sharinghands.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,9 +49,19 @@ public class NGOLoginFragment extends Fragment {
         final EditText email = root.findViewById(R.id.ngo_email);
         final EditText password = root.findViewById(R.id.ngo_password);
         final Button btn = root.findViewById(R.id.ngo_login);
+        final TextView forget_password = root.findViewById(R.id.forget_password);
         final ProgressBar progressBar = root.findViewById(R.id.ngo_login_progress_bar);
 
-        sharedpreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("login_session", Context.MODE_PRIVATE);
+        forget_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ForgetPassword.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        sharedpreferences = requireActivity().getSharedPreferences("login_session", Context.MODE_PRIVATE);
 
 
         final TextView register_link = root.findViewById(R.id.ngo_register_link);

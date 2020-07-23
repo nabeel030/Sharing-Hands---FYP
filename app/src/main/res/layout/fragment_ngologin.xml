@@ -71,11 +71,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ngo_login"
         android:textColor="@android:color/white"
-        android:text="Haven't an Account? Create here"
+        android:text="@string/haven_t_an_account_create_here"
         android:textSize="18sp"
         android:clickable="true"
         android:focusable="true"
         android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:id="@+id/forget_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ngo_register_link"
+        android:textColor="@android:color/white"
+        android:text="@string/forgot_password"
+        android:textSize="18sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
         />
 

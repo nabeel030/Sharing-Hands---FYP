@@ -70,6 +70,20 @@
         android:layout_centerHorizontal="true"
         />
 
+    <TextView
+        android:id="@+id/forget_password_donor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/donor_register_link"
+        android:textColor="@android:color/white"
+        android:text="@string/forgot_password"
+        android:textSize="18sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        />
+
     <ProgressBar
         android:id="@+id/progress_circular"
         android:layout_width="100dp"

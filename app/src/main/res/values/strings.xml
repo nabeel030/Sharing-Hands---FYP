@@ -38,7 +38,10 @@
     <string name="upload">Upload</string>
     <string name="title_activity_dashboard">Dashboard</string>
     <string name="choose">Browse Image</string>
-
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="haven_t_an_account_create_here">Haven\'t an Account? Create here</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="posts">Posts</string>
 
 
 </resources>

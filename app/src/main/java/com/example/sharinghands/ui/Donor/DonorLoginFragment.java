@@ -22,6 +22,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.sharinghands.DonorHome;
+import com.example.sharinghands.ForgetPassword;
 import com.example.sharinghands.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,8 +49,18 @@ public class DonorLoginFragment extends Fragment {
         final Button login = root.findViewById(R.id.donor_login);
         final TextView register_link = root.findViewById(R.id.donor_register_link);
         final ProgressBar progressBar = root.findViewById(R.id.progress_circular);
+        final TextView forget_password = root.findViewById(R.id.forget_password_donor);
 
-        sharedpreferences = Objects.requireNonNull(getActivity()).getSharedPreferences("login_session", Context.MODE_PRIVATE);
+        forget_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ForgetPassword.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
+
+        sharedpreferences = requireActivity().getSharedPreferences("login_session", Context.MODE_PRIVATE);
 
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override

@@ -1,123 +1,61 @@
-package com.example.sharinghands;
+package com.example.sharinghands.ui.Donor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.sharinghands.ui.Donor.History;
+import com.example.sharinghands.ChangePassword;
+import com.example.sharinghands.DatabaseHelper;
+import com.example.sharinghands.DonorHome;
+import com.example.sharinghands.LoginActivity;
+import com.example.sharinghands.R;
 import com.example.sharinghands.ui.NGO.ActivePosts;
-import com.example.sharinghands.ui.Post;
-import com.example.sharinghands.ui.PostAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
-public class DonorHome extends AppCompatActivity {
-
-    Context context = this;
-    RecyclerView recyclerView;
-    SwipeRefreshLayout refreshLayout;
-    ArrayList<Post> arrayList = new ArrayList<>();
-    RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter adapter;
-    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    DatabaseReference databaseReference = firebaseDatabase.getReference("Post");
-    ProgressBar progressBar;
+public class History extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_donor_home);
+        setContentView(R.layout.activity_history);
 
-        setTitle("Active Posts");
+        setTitle("History");
 
+        final ListView list = findViewById(R.id.historyList);
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        recyclerView = findViewById(R.id.post_recyclerview);
-        refreshLayout = findViewById(R.id.swipeRefresh);
-        progressBar = findViewById(R.id.donor_home_progressbar);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        progressBar.setVisibility(View.VISIBLE);
+        ArrayList<String> arrayList = new ArrayList<>();
 
-        loadPosts(databaseReference);
+        Cursor cursor = databaseHelper.getUserHistory(user.getUid());
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        while (cursor.moveToNext()) {
+            String info = "You have donated Rs. "+cursor.getString(4) + " to a Post titled (" + cursor.getString(3) + ") posted by NGO ("+ cursor.getString(2) + ")";
+            arrayList.add(info);
 
-                loadPosts(databaseReference);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                },3000);
-
-            }
-        });
+        }
 
 
-    }
-
-    public void loadPosts(DatabaseReference databaseReference) {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                arrayList.clear();
-
-                for (DataSnapshot posts : dataSnapshot.getChildren()){
-
-                    Post post = posts.getValue(Post.class);
-
-                    if (post.getRaised_amount() < post.getRequired_amount()) {
-                        post.setPostKey(posts.getKey());
-                        arrayList.add(post);
-                    }
-                }
-
-                adapter = new PostAdapter(arrayList,context);
-
-                layoutManager = new LinearLayoutManager(getApplicationContext());
-                ((LinearLayoutManager) layoutManager).setReverseLayout(true);
-                ((LinearLayoutManager) layoutManager).setStackFromEnd(true);
-
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setAdapter(adapter);
-
-                progressBar.setVisibility(View.GONE);
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(),"Failed!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
+        list.setAdapter(arrayAdapter);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,14 +66,21 @@ public class DonorHome extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.posts:
+                Intent posts = new Intent(History.this, ActivePosts.class);
+                posts.putExtra("post_status", "active");
+                startActivity(posts);
+                finish();
+                return true;
+
             case R.id.history:
-                Intent history = new Intent(DonorHome.this, History.class);
+                Intent history = new Intent(History.this, History.class);
                 startActivity(history);
                 finish();
                 return true;
 
             case R.id.change_password:
-                Intent intent = new Intent(DonorHome.this, ChangePassword.class);
+                Intent intent = new Intent(History.this, ChangePassword.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -148,14 +93,14 @@ public class DonorHome extends AppCompatActivity {
                 editor.putString("status", "");
                 editor.apply();
 
-                startActivity(new Intent(DonorHome.this,LoginActivity.class));
+                startActivity(new Intent(History.this, LoginActivity.class));
                 finish();
                 return true;
 
             case R.id.donor_delete_account:
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        context);
+                        getApplicationContext());
                 alertDialogBuilder.setTitle("Caution!");
 
                 alertDialogBuilder.setMessage("Are You Sure? After you delete an account, it's permanently deleted!")
@@ -176,7 +121,7 @@ public class DonorHome extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    startActivity(new Intent(DonorHome.this,LoginActivity.class));
+                                                    startActivity(new Intent(History.this,LoginActivity.class));
                                                     finish();
                                                     Toast.makeText(getApplicationContext(),"Account Deleted Successfully!", Toast.LENGTH_SHORT).show();
                                                 }
@@ -195,7 +140,6 @@ public class DonorHome extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
     @Override
     public void onBackPressed() {
 

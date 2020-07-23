@@ -9,6 +9,11 @@
         >
 
         <menu>
+            <item android:id="@+id/posts"
+                android:icon="@drawable/ic_stay_primary_portrait_black_24dp"
+                android:title="@string/posts"
+                app:showAsAction="never"/>
+
             <item android:id="@+id/history"
                 android:icon="@drawable/ic_history_black_24dp"
                 android:title="@string/menu_history"

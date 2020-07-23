@@ -148,18 +148,11 @@ public class Dashboard extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.ngo_posts:
-                Intent i = new Intent(Dashboard.this, ActivePosts.class);
-                i.putExtra("post_status", "active");
-                startActivity(i);
+            case R.id.ngo_change_logo:
+                Intent logo_intent = new Intent(this, LogoUpload.class);
+                startActivity(logo_intent);
                 finish();
-                return true;
-
-                case R.id.ngo_change_logo:
-                    Intent logo_intent = new Intent(this, LogoUpload.class);
-                    startActivity(logo_intent);
-                    finish();
-                return true;
+            return true;
 
             case R.id.ngo_change_password:
                 Intent intent = new Intent(Dashboard.this, ChangePassword.class);

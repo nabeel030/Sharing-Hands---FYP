@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -73,15 +72,15 @@ public class CreatePost extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
-    private String getExtension(Uri uri) {
+    /*private String getExtension(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
-    }
+    }*/
 
     private void imageUploader(String postKey){
 
-        final StorageReference reference = storageReference.child(postKey+"."+getExtension(imageUri));
+        final StorageReference reference = storageReference.child(postKey+".png");
 
         reference.putFile(imageUri)
                 .addOnFailureListener(new OnFailureListener() {

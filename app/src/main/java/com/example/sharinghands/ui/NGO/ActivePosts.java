@@ -3,6 +3,7 @@ package com.example.sharinghands.ui.NGO;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -51,7 +52,6 @@ public class ActivePosts extends AppCompatActivity {
     DatabaseReference databaseReference = firebaseDatabase.getReference("Post");
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     ProgressBar progressBar;
-    TextView noposts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,8 @@ public class ActivePosts extends AppCompatActivity {
 
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
+
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -119,11 +121,15 @@ public class ActivePosts extends AppCompatActivity {
                         }
 
                         if (postStatus.equals("all")) {
+                            if (post.getRaised_amount() >= post.getRequired_amount()) {
+                                post.setPost_status(true);
+                            }
                             arrayList.add(post);
                         }
 
                         if (postStatus.equals("completed")) {
                             if (post.getRaised_amount() >= post.getRequired_amount()) {
+                                post.setPost_status(true);
                                 arrayList.add(post);
                             }
                         }
@@ -159,6 +165,9 @@ public class ActivePosts extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.ngo_posts:
+                Intent i = new Intent(ActivePosts.this, Dashboard.class);
+                startActivity(i);
+                finish();
                 return true;
 
             case R.id.ngo_change_password:
