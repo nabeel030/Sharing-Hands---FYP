@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="50dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="40dp"
+    android:paddingStart="40dp"
+    android:paddingBottom="40dp"
     android:background="@drawable/gradient">
 
     <ProgressBar
@@ -18,8 +21,8 @@
 
     <ImageView
         android:id="@+id/login_ngo_logo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/logo"
         />
@@ -32,7 +35,7 @@
         android:inputType="textEmailAddress"
         android:layout_below="@+id/login_ngo_logo"
         android:background="#11000000"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="15dp"
         android:textColorHint="@android:color/white"
         android:drawableStart="@drawable/ic_email"
         android:textColor="@android:color/white"

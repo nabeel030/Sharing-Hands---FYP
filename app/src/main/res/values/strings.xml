@@ -42,6 +42,7 @@
     <string name="haven_t_an_account_create_here">Haven\'t an Account? Create here</string>
     <string name="reset_password">Reset Password</string>
     <string name="posts">Posts</string>
+    <string name="register">Register</string>
 
 
 </resources>

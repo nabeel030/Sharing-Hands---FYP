@@ -37,8 +37,7 @@ public class ChangePassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        setTitle("Change Password");
 
         btn = findViewById(R.id.donor_change_password_btn);
         donor_old_password = findViewById(R.id.donor_old_password);

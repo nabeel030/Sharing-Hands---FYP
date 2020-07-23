@@ -28,7 +28,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class History extends AppCompatActivity {
 
@@ -47,8 +49,11 @@ public class History extends AppCompatActivity {
 
         Cursor cursor = databaseHelper.getUserHistory(user.getUid());
 
+        SimpleDateFormat s = new SimpleDateFormat("dd-MM-yyyy-hh:mm");
+        String date = s.format(new Date());
+
         while (cursor.moveToNext()) {
-            String info = "You have donated Rs. "+cursor.getString(4) + " to a Post titled (" + cursor.getString(3) + ") posted by NGO ("+ cursor.getString(2) + ")";
+            String info = "You have donated Rs. "+cursor.getString(4) + " on " + date + " to a Post titled (" + cursor.getString(3) + ") posted by NGO ("+ cursor.getString(2) + ").";
             arrayList.add(info);
 
         }
@@ -67,8 +72,7 @@ public class History extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.posts:
-                Intent posts = new Intent(History.this, ActivePosts.class);
-                posts.putExtra("post_status", "active");
+                Intent posts = new Intent(History.this, DonorHome.class);
                 startActivity(posts);
                 finish();
                 return true;
