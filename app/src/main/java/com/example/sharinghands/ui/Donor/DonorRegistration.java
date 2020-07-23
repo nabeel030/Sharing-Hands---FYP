@@ -90,7 +90,7 @@ public class DonorRegistration extends AppCompatActivity {
 
                                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(username).build();
+                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName("donor").build();
 
                                                 user.updateProfile(profileUpdates);
 

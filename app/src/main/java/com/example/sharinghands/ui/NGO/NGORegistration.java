@@ -106,7 +106,7 @@ public class NGORegistration extends AppCompatActivity {
                                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                                 String userID = user.getUid();
 
-                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName(ngo_name).build();
+                                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder().setDisplayName("ngo").build();
 
                                                 user.updateProfile(profileUpdates);
 

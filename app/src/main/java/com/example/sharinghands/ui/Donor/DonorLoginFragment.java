@@ -109,13 +109,30 @@ public class DonorLoginFragment extends Fragment {
                                             }else {
 
                                                 if (firebaseAuth.getCurrentUser().isEmailVerified()) {
-                                                    SharedPreferences.Editor editor = sharedpreferences.edit();
-                                                    editor.putString("status", "donor");
-                                                    editor.apply();
+                                                    if (firebaseAuth.getCurrentUser().getDisplayName().equals("donor")) {
+                                                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                        editor.putString("status", "donor");
+                                                        editor.apply();
 
-                                                    Intent intent = new Intent(getActivity(), DonorHome.class);
-                                                    startActivity(intent);
-                                                    getActivity().finish();
+                                                        Intent intent = new Intent(getActivity(), DonorHome.class);
+                                                        startActivity(intent);
+                                                        getActivity().finish();
+                                                    } else if (firebaseAuth.getCurrentUser().getDisplayName().equals("ngo")){
+                                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                                getContext());
+                                                        alertDialogBuilder.setTitle("Info!");
+
+                                                        alertDialogBuilder.setMessage("This email address is registered as NGO account. Kindly Login as NGO!")
+                                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                                    }
+                                                                });
+
+                                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                                        alertDialog.show();
+                                                    }
                                                 }else{
                                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                                             getContext());

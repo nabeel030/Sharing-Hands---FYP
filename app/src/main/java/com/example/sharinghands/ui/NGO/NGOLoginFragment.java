@@ -111,15 +111,30 @@ public class NGOLoginFragment extends Fragment {
                                             }else {
 
                                                 if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                                    if (firebaseAuth.getCurrentUser().getDisplayName().equals("ngo")) {
+                                                        SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                        editor.putString("status", "ngo");
+                                                        editor.apply();
 
-                                                    SharedPreferences.Editor editor = sharedpreferences.edit();
+                                                        Intent intent = new Intent(getActivity(), Dashboard.class);
+                                                        startActivity(intent);
+                                                        getActivity().finish();
+                                                    } else if(firebaseAuth.getCurrentUser().getDisplayName().equals("donor")) {
+                                                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                                getContext());
+                                                        alertDialogBuilder.setTitle("Info!");
 
-                                                    editor.putString("status", "ngo");
-                                                    editor.apply();
+                                                        alertDialogBuilder.setMessage("This email address is registered as Donor account. Kindly Login as Donor!")
+                                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(DialogInterface dialog, int which) {
 
-                                                    Intent intent = new Intent(getActivity(), Dashboard.class);
-                                                    startActivity(intent);
-                                                    getActivity().finish();
+                                                                    }
+                                                                });
+
+                                                        AlertDialog alertDialog = alertDialogBuilder.create();
+                                                        alertDialog.show();
+                                                    }
                                                 } else {
                                                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                                                             getContext());
