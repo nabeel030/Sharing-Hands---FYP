@@ -3,8 +3,12 @@ package com.example.sharinghands;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,14 +22,22 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.example.sharinghands.ui.NGO.Dashboard;
 import com.example.sharinghands.ui.Post;
+import com.example.sharinghands.ui.PostAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.shadow.ShadowRenderer;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class CreatePost extends AppCompatActivity {
 
@@ -38,7 +50,9 @@ public class CreatePost extends AppCompatActivity {
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference mDatabase;
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     StorageReference storageReference;
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +131,7 @@ public class CreatePost extends AppCompatActivity {
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
+
             if (!title.isEmpty() && !desc.isEmpty() && !raised.isEmpty() && !required.isEmpty()) {
 
                 int raised_amount = Integer.parseInt(raised);
@@ -127,7 +142,28 @@ public class CreatePost extends AppCompatActivity {
 
                 if (raised_amount < required_amount) {
 
-                    post = new Post(userID,R.drawable.logo, user.getDisplayName(), title, desc,
+                    DatabaseReference databaseReference = firebaseDatabase.getReference().child("NGOs").child(userID).child("ngo_title");
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String ngoTitle = snapshot.getValue().toString();
+                            sharedPreferences = getSharedPreferences("NGOtitle", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("ngo_title", ngoTitle);
+                            editor.apply();
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                    sharedPreferences = getSharedPreferences("NGOtitle",MODE_PRIVATE);
+                    String ngoTitle = sharedPreferences.getString("ngo_title","nabeel");
+
+                    post = new Post(userID,R.drawable.logo, ngoTitle, title, desc,
                             R.drawable.logo, raised_amount, required_amount);
 
                     mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -135,25 +171,33 @@ public class CreatePost extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
 
                     final String postKey = mDatabase.child("Post").push().getKey();
-                    mDatabase.child("Post").child(postKey).setValue(post)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    imageUploader(postKey);
-                                    progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(getApplication(), "Post Created Successfully!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(CreatePost.this, Dashboard.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    progressBar.setVisibility(View.VISIBLE);
-                                    Toast.makeText(getApplication(), "Post Failed!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
+
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            mDatabase.child("Post").child(postKey).setValue(post)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            imageUploader(postKey);
+                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(getApplication(), "Post Created Successfully!", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(CreatePost.this, Dashboard.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            progressBar.setVisibility(View.VISIBLE);
+                                            Toast.makeText(getApplication(), "Post Failed!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    },4000);
+
                 }else {
                     Toast.makeText(getApplicationContext(),"Raised Amount Cant be greater than Required Amount!",Toast.LENGTH_SHORT).show();
                 }

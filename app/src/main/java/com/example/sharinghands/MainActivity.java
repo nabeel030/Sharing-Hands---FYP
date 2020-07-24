@@ -2,13 +2,9 @@ package com.example.sharinghands;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-
-import com.example.sharinghands.ui.NGO.ActivePosts;
 import com.example.sharinghands.ui.NGO.Dashboard;
 import com.google.firebase.auth.FirebaseAuth;
 

@@ -120,7 +120,7 @@ public class Post {
         this.post_status = post_status;
     }
 
-    public void Donate(String key, final int raisedAmount, final Context context, final String ngo, final String postTitle) {
+    public void Donate(String key, final int raisedAmount, final int requiredAmount, final Context context, final String ngo, final String postTitle) {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference databaseReference = firebaseDatabase.getReference("Post").child(key);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -145,8 +145,25 @@ public class Post {
                 databaseReference.child("raised_amount").setValue(raisedAmount + donationAmount);
 
                 Toast toast = Toast.makeText(context, "Thank you for your Donation!", Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.setGravity(Gravity.BOTTOM, 0, 0);
                 toast.show();
+
+                if ((raisedAmount + donationAmount) >= requiredAmount) {
+                    androidx.appcompat.app.AlertDialog.Builder alertDialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(
+                            context);
+                    alertDialogBuilder.setTitle("Info!");
+
+                    alertDialogBuilder.setMessage("Total Fund required for this post has been raised. Thank you!")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+
+                    androidx.appcompat.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
 
                 databaseHelper.DataInsertion(user.getUid(),ngo,postTitle,donationAmount);
             }

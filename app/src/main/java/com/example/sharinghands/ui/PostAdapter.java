@@ -1,7 +1,6 @@
 package com.example.sharinghands.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.sharinghands.R;
-import com.example.sharinghands.SinglePost;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -114,7 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     Post selectedPost = mposts.get(position);
-                    selectedPost.Donate(selectedPost.getPostKey(), selectedPost.getRaised_amount(), context, selectedPost.getNgo_title(), selectedPost.getPost_title());
+                    selectedPost.Donate(selectedPost.getPostKey(), selectedPost.getRaised_amount(), selectedPost.getRequired_amount(), context, selectedPost.getNgo_title(), selectedPost.getPost_title());
                 }
             });
 
